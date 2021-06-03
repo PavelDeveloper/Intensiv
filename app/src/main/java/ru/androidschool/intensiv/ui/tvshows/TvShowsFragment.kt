@@ -23,7 +23,7 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
             ShowItem(it) { movie ->
                 Timber.d("show's name ${movie.title}")
             }
-        }
+        }.toList()
         shows_recycler_view.adapter = adapter.apply { addAll(showsList) }
     }
 }
