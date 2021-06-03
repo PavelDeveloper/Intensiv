@@ -12,6 +12,6 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_card_shows" />
+        tools:listitem="@layout/item_with_text_horizontal" />
 
 </FrameLayout>

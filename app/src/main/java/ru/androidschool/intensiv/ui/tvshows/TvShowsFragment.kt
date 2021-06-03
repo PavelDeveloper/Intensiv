@@ -19,17 +19,13 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        shows_recycler_view.isNestedScrollingEnabled = true
-
-        val showsList = listOf(
-            CardContainer(
-                MockRepository.getTvShows().map {
-                    ShowItem(it) { movie ->
-                        Timber.d("show's name ${movie.title}")
-                    }
-                }.toList()
-            )
-        )
+        val shows = MockRepository.getTvShows()
+        val showsList: MutableList<ShowItem> = mutableListOf()
+        shows.forEach {
+            showsList.add(ShowItem(it) { movie ->
+                Timber.d("show's name ${movie.title}")
+            })
+        }
         shows_recycler_view.adapter = adapter.apply { addAll(showsList) }
     }
 }
