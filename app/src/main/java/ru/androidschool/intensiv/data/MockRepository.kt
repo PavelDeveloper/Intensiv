@@ -60,4 +60,56 @@ object MockRepository {
 
         return showsList
     }
+
+    fun getMovieDetail(): Movie = Movie(
+        title = "Острые козырьки",
+        previewUrl = "https://www.themoviedb.org/t/p/w1280/jrOHaO3KhboWdsMW3CUFDcj6Mgs.jpg",
+        actors = getActors(),
+        description = "Британский сериал о криминальном мире Бирмингема 20-х годов прошлого века, в котором многолюдная семья Шелби стала одной из самых жестоких и влиятельных гангстерских банд послевоенного времени. Фирменным знаком группировки, промышлявшей грабежами и азартными играми, стали зашитые в козырьки лезвия.",
+        voteAverage = 4.7,
+        year = "2020",
+        genre = "Криминал, драма",
+        studio = "BBC One"
+    )
+
+    private fun getActors(): List<Actor> {
+        val actorsList = mutableListOf<Actor>()
+        actorsList.add(
+            Actor(
+                name = "Cillian Murphy",
+                avatarUrl = "https://www.themoviedb.org/t/p/w276_and_h350_face/i8dOTC0w6V274ev5iAAvo4Ahhpr.jpg"
+            )
+        )
+        actorsList.add(
+            Actor(
+                name = "Paul Anderson",
+                avatarUrl = "https://www.themoviedb.org/t/p/w276_and_h350_face/nds5rTBZvJ4rEsP4N6OaoEgQDkW.jpg"
+            )
+        )
+        actorsList.add(
+            Actor(
+                name = "Helen McCrory",
+                avatarUrl = "https://www.themoviedb.org/t/p/w276_and_h350_face/dVtwKuGce3BhUcqfdpxFvpCT8YT.jpg"
+            )
+        )
+        actorsList.add(
+            Actor(
+                name = "Sophie Rundle",
+                avatarUrl = "https://www.themoviedb.org/t/p/w276_and_h350_face/9HxJ6pG1Q0BBbIV1UXk5iU9zDM9.jpg"
+            )
+        )
+        actorsList.add(
+            Actor(
+                name = "Tom Hardy",
+                avatarUrl = "https://www.themoviedb.org/t/p/w276_and_h350_face/yVGF9FvDxTDPhGimTbZNfghpllA.jpg"
+            )
+        )
+        actorsList.add(
+            Actor(
+                name = "Joe Cole",
+                avatarUrl = "https://www.themoviedb.org/t/p/w276_and_h350_face/33oo1eKMjLtknBWJBqtWvJQ8Xgv.jpg"
+            )
+        )
+        return actorsList
+    }
 }
