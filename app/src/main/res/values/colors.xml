@@ -6,7 +6,7 @@
 
     <color name="colorControlNormal">#f9a825</color>
 
-    <color name="blueDark">#2C3848</color>
+    <color name="color_background_main">#2C3848</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>

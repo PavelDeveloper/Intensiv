@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@color/blueDark"
+            android:background="@color/color_background_main"
             app:tabIndicatorColor="@color/selectedControlIndicator"
             app:tabIndicatorFullWidth="false"
             app:tabMode="fixed"
@@ -80,7 +80,7 @@
             android:id="@+id/doppelgangerViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/blueDark" />
+            android:background="@color/color_background_main" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

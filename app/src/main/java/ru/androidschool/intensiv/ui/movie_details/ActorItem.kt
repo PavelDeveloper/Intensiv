@@ -1,13 +1,12 @@
 package ru.androidschool.intensiv.ui.movie_details
 
-import com.squareup.picasso.Picasso
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.item_with_text_circle.*
-import kotlinx.android.synthetic.main.item_with_text_horizontal.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Actor
-import ru.androidschool.intensiv.utils.CircleTransform
+import ru.androidschool.intensiv.utils.loadTransformationImage
 
 class ActorItem(
     private val content: Actor
@@ -17,10 +16,6 @@ class ActorItem(
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.name_tv.text = content.name.replace(" ", "\n")
-
-        Picasso.get()
-            .load(content.avatarUrl)
-            .transform(CircleTransform())
-            .into(viewHolder.actor_avatar)
+        viewHolder.actor_avatar.loadTransformationImage(content.avatarUrl, CropCircleTransformation())
     }
 }

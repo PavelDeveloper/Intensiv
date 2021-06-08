@@ -3,7 +3,6 @@ package ru.androidschool.intensiv.ui.movie_details
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import kotlinx.android.synthetic.main.movie_details_fragment.*
@@ -11,6 +10,7 @@ import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MockRepository.getMovieDetail
 import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.ui.feed.FeedFragment
+import ru.androidschool.intensiv.utils.loadImage
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
@@ -32,10 +32,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
         genre_name_tv.text = movie.genre
         studio_name_tv.text = movie.studio
         year_name_tv.text = movie.year
-
-        Picasso.get()
-            .load(movie.previewUrl)
-            .into(image_detail_preview)
+        image_detail_preview.loadImage(movie.previewUrl)
 
         val actorList = movie.actors.map { ActorItem(it) }.toList()
         actors_recycler_view.adapter = adapter.apply { addAll(actorList) }

@@ -10,7 +10,7 @@
     android:layout_marginEnd="@dimen/material_margin_super_small"
     android:layout_marginBottom="@dimen/material_margin_normal"
     android:orientation="vertical"
-    tools:background="@color/blueDark"
+    tools:background="@color/color_background_main"
     tools:ignore="RtlHardcoded">
 
     <com.google.android.material.imageview.ShapeableImageView

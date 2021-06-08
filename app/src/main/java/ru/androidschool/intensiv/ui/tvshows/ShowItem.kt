@@ -1,12 +1,11 @@
 package ru.androidschool.intensiv.ui.tvshows
 
-import com.squareup.picasso.Picasso
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.item_with_text_horizontal.*
-import kotlinx.android.synthetic.main.movie_details_fragment.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.Show
+import ru.androidschool.intensiv.utils.loadImage
 
 class ShowItem(
     private val content: Show,
@@ -21,9 +20,6 @@ class ShowItem(
         viewHolder.content.setOnClickListener {
             onClick.invoke(content)
         }
-
-        Picasso.get()
-            .load(content.posterUrl)
-            .into(viewHolder.image_poster)
+        viewHolder.image_poster.loadImage(content.posterUrl)
     }
 }
