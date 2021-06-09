@@ -8,14 +8,14 @@ import ru.androidschool.intensiv.R
 
 fun ImageView.loadTransformationImage(imgUrl: String?, transformation: Transformation) {
     Picasso.get()
-        .load(imgUrl)
+        .load(POSTER_BASE_URL + imgUrl)
         .transform(transformation)
         .into(this)
 }
 
 fun ImageView.loadImage(imgUrl: String?) {
     Picasso.get()
-        .load(imgUrl)
+        .load(POSTER_BASE_URL + imgUrl)
         .into(this)
 }
 

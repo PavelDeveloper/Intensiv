@@ -81,7 +81,7 @@
             style="@style/TextSecondaryStyler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/material_margin_normal"
+            android:padding="@dimen/material_margin_normal"
             android:layout_marginTop="@dimen/material_margin_small"
             android:gravity="start"
             app:layout_constraintStart_toStartOf="parent"
