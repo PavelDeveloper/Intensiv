@@ -1,3 +1,3 @@
 package ru.androidschool.intensiv.utils
 
-const val POSTER_BASE_URL = "https://image.tmdb.org/t/p/w1280/"
+const val API_KEY = "api_key"

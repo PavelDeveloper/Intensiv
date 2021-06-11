@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.network
 
+import android.os.Build.VERSION.RELEASE
 import okhttp3.Cache
 import okhttp3.CacheControl
 import okhttp3.Interceptor
@@ -7,11 +8,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.MovieFinderApp
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-object MovieApiClient : BaseApi() {
+object MovieApiClient {
     private const val cacheSize: Long = 5 * 1024 * 1024
     private const val HEADER_CACHE_CONTROL = "Cache-Control"
     private const val HEADER_PRAGMA = "Pragma"
@@ -22,22 +24,28 @@ object MovieApiClient : BaseApi() {
 
     private val client: Retrofit
         get() {
-            val interceptor = HttpLoggingInterceptor(CustomHttpLogging())
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-            val client = OkHttpClient.Builder()
-                .addInterceptor(AuthInterceptor())
-                .addInterceptor(interceptor)
-                .cache(cache)
-                .addNetworkInterceptor(networkInterceptor())
-                .addInterceptor(offlineInterceptor())
-                .build()
+            val client = if (BuildConfig.BUILD_TYPE != RELEASE) {
+                val interceptor = HttpLoggingInterceptor(CustomHttpLogging())
+                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+                clientBuilder.addInterceptor(interceptor)
+                    .build()
+            } else
+                clientBuilder.build()
 
             return Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
         }
+
+    private val clientBuilder: OkHttpClient.Builder
+        get() =
+            OkHttpClient.Builder()
+                .addInterceptor(AuthInterceptor())
+                .cache(cache)
+                .addNetworkInterceptor(networkInterceptor())
+                .addInterceptor(offlineInterceptor())
 
     val api: MovieApiInterface
         get() {
@@ -62,17 +70,15 @@ object MovieApiClient : BaseApi() {
     private fun offlineInterceptor(): Interceptor {
         return Interceptor { chain ->
             var request = chain.request()
-            if (MovieFinderApp.hasNetwork()) {
-                val cacheControl = CacheControl.Builder()
-                    .maxAge(7, TimeUnit.DAYS)
-                    .build()
+            val cacheControl = CacheControl.Builder()
+                .maxAge(7, TimeUnit.DAYS)
+                .build()
 
-                request = request.newBuilder()
-                    .removeHeader(HEADER_PRAGMA)
-                    .removeHeader(HEADER_CACHE_CONTROL)
-                    .cacheControl(cacheControl)
-                    .build()
-            }
+            request = request.newBuilder()
+                .removeHeader(HEADER_PRAGMA)
+                .removeHeader(HEADER_CACHE_CONTROL)
+                .cacheControl(cacheControl)
+                .build()
             chain.proceed(request)
         }
     }

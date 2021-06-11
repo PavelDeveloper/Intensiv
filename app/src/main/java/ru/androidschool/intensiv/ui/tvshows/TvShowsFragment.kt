@@ -22,10 +22,7 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getTvShows()
-
         viewModel.shows.observe(requireActivity(), Observer { tvShows ->
-
             val showsList = tvShows.map {
                 ShowItem(it) { movie ->
                     Timber.d("show's name ${movie.name}")

@@ -14,21 +14,16 @@ import ru.androidschool.intensiv.utils.loadImage
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
-    private val viewModel: MovieDetailsViewModel by viewModels()
+    private val viewModel: MovieDetailsViewModel by viewModels {
+        MovieDetailsViewModelFactory(arguments?.getInt(FeedFragment.KEY_MOVIE_ID))
+    }
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
     }
 
-    private var movieId: Int? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        movieId = arguments?.getInt(FeedFragment.KEY_MOVIE_ID)
-
-        viewModel.getMovieDetail(requireNotNull(movieId))
-        viewModel.getActors(requireNotNull(movieId))
 
         viewModel.movieDetails.observe(requireActivity(), Observer { details ->
             title_tv.text = details.title

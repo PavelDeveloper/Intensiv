@@ -16,7 +16,11 @@ class TvShowsViewModel : ViewModel() {
     private val _shows: MutableLiveData<List<TvShow>> = MutableLiveData()
     val shows: LiveData<List<TvShow>> = _shows
 
-    fun getTvShows() {
+    init {
+        getTvShows()
+    }
+
+    private fun getTvShows() {
         MovieApiClient.api.getTvPopular()
             .enqueue(object : Callback<TvShowsResponse> {
                 override fun onResponse(
@@ -25,7 +29,7 @@ class TvShowsViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         response.body()?.let {
-                            _shows.postValue(it.results)
+                            _shows.value = it.results
                         }
                     }
                 }

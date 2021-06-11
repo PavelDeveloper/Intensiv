@@ -12,7 +12,14 @@ import ru.androidschool.intensiv.network.entity.CreditsResponse
 import ru.androidschool.intensiv.network.entity.MovieDetailResponse
 import timber.log.Timber
 
-class MovieDetailsViewModel : ViewModel() {
+class MovieDetailsViewModel(movieId: Int?) : ViewModel() {
+
+    init {
+        movieId?.let {
+            getMovieDetail(it)
+            getActors(it)
+        }
+    }
 
     private val _movieDetails: MutableLiveData<MovieDetailResponse> = MutableLiveData()
     val movieDetails: LiveData<MovieDetailResponse> = _movieDetails
@@ -20,7 +27,7 @@ class MovieDetailsViewModel : ViewModel() {
     private val _actors: MutableLiveData<List<Actor>> = MutableLiveData()
     val actors: LiveData<List<Actor>> = _actors
 
-    fun getMovieDetail(id: Int) {
+    private fun getMovieDetail(id: Int) {
         MovieApiClient.api.getMovieDetail(movieId = id)
             .enqueue(object : Callback<MovieDetailResponse> {
                 override fun onResponse(
@@ -29,7 +36,7 @@ class MovieDetailsViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         response.body()?.let {
-                            _movieDetails.postValue(it)
+                            _movieDetails.value = it
                         }
                     }
                 }
@@ -40,7 +47,7 @@ class MovieDetailsViewModel : ViewModel() {
             })
     }
 
-    fun getActors(id: Int) {
+    private fun getActors(id: Int) {
         MovieApiClient.api.getActors(movieId = id)
             .enqueue(object : Callback<CreditsResponse> {
                 override fun onResponse(
@@ -49,7 +56,7 @@ class MovieDetailsViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         response.body()?.let {
-                            _actors.postValue(it.cast)
+                            _actors.value = it.cast
                         }
                     }
                 }

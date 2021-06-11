@@ -4,18 +4,19 @@ import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
 
 fun ImageView.loadTransformationImage(imgUrl: String?, transformation: Transformation) {
     Picasso.get()
-        .load(POSTER_BASE_URL + imgUrl)
+        .load(BuildConfig.POSTER_BASE_URL + imgUrl)
         .transform(transformation)
         .into(this)
 }
 
 fun ImageView.loadImage(imgUrl: String?) {
     Picasso.get()
-        .load(POSTER_BASE_URL + imgUrl)
+        .load(BuildConfig.POSTER_BASE_URL + imgUrl)
         .into(this)
 }
 

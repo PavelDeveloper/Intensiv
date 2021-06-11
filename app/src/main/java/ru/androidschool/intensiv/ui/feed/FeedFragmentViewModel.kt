@@ -13,6 +13,12 @@ import timber.log.Timber
 
 class FeedFragmentViewModel : ViewModel() {
 
+    init {
+        getPlayingMovies()
+        getPopularMovies()
+        getUpcomingMovies()
+    }
+
     private val _playingMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     val playingMovies: LiveData<List<Movie>> = _playingMovies
 
@@ -31,7 +37,7 @@ class FeedFragmentViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        _playingMovies.postValue(it.results)
+                        _playingMovies.value = it.results
                     }
                 }
             }
@@ -51,7 +57,7 @@ class FeedFragmentViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        _popularMovies.postValue(it.results)
+                        _popularMovies.value = it.results
                     }
                 }
             }
@@ -71,7 +77,7 @@ class FeedFragmentViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        _upcomingMovies.postValue(it.results)
+                        _upcomingMovies.value = it.results
                     }
                 }
             }

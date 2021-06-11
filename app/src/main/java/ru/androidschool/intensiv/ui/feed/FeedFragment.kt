@@ -48,12 +48,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         movies_recycler_view.adapter = adapter
-        adapter.clear()
-
-        viewModel.getPlayingMovies()
-        viewModel.getPopularMovies()
-        viewModel.getUpcomingMovies()
-
         initObservers()
 
         search_toolbar.search_edit_text.afterTextChanged {
@@ -126,6 +120,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     override fun onStop() {
         super.onStop()
         search_toolbar.clear()
+        adapter.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
