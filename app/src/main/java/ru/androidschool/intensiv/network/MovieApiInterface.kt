@@ -1,6 +1,6 @@
 package ru.androidschool.intensiv.network
 
-import retrofit2.Call
+import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
 import ru.androidschool.intensiv.network.entity.CreditsResponse
@@ -11,20 +11,20 @@ import ru.androidschool.intensiv.network.entity.TvShowsResponse
 interface MovieApiInterface {
 
     @GET("movie/now_playing")
-    fun getNowPlayingMovies(): Call<MoviesResponse>
+    fun getNowPlayingMovies(): Observable<MoviesResponse>
 
     @GET("movie/upcoming")
-    fun getUpcomingMovies(): Call<MoviesResponse>
+    fun getUpcomingMovies(): Observable<MoviesResponse>
 
     @GET("movie/popular")
-    fun getPopularMovies(): Call<MoviesResponse>
+    fun getPopularMovies(): Observable<MoviesResponse>
 
     @GET("tv/popular")
-    fun getTvPopular(): Call<TvShowsResponse>
+    fun getTvPopular(): Observable<TvShowsResponse>
 
     @GET("movie/{movie_id}")
-    fun getMovieDetail(@Path("movie_id") movieId: Int): Call<MovieDetailResponse>
+    fun getMovieDetail(@Path("movie_id") movieId: Int): Observable<MovieDetailResponse>
 
     @GET("movie/{movie_id}/credits")
-    fun getActors(@Path("movie_id") movieId: Int): Call<CreditsResponse>
+    fun getActors(@Path("movie_id") movieId: Int): Observable<CreditsResponse>
 }

@@ -19,6 +19,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://oss.jfrog.org/libs-snapshot" }
     }
 }
 
@@ -49,4 +50,7 @@ ext {
 
     retrofitVersion = '2.9.0'
     interceptorVersion = '4.9.1'
+
+    rxAndroid = '2.1.1'
+    rxJava = '2.2.16'
 }
