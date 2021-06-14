@@ -11,18 +11,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
 import ru.androidschool.intensiv.R
-
 import ru.androidschool.intensiv.network.entity.Movie
 import ru.androidschool.intensiv.ui.afterTextChanged
-import timber.log.Timber
+import ru.androidschool.intensiv.ui.view.MovieItem
+import ru.androidschool.intensiv.utils.hideKeyboard
+import java.util.concurrent.TimeUnit
 
 class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     private val viewModel: FeedFragmentViewModel by viewModels()
+    private val compositeDisposable = CompositeDisposable()
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -37,30 +43,35 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         }
     }
 
-    /**
-    * Есть бага: при возвращении с экрана деталей адаптер перерисовует списки фильмов, т.е. вместо
-     * трёх скрол блоков(как при первой загрузке) отрисовует 6-7. я полагаю, что это данные остаются в адаптере и при
-     * возвращении на этот экран livedata отдаёт данные, которые добавляются к данным в адаптере, но это не точно :)
-    * Подскажите плиз из-за чего на самом деле такая проблема.
-     * */
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         movies_recycler_view.adapter = adapter
         initObservers()
 
-        search_toolbar.search_edit_text.afterTextChanged {
-            Timber.d(it.toString())
-            if (it.toString().length > MIN_LENGTH) {
-                openSearch(it.toString())
+        val publishSubject: Observable<String> = Observable.create { emitter ->
+            with(search_toolbar.search_edit_text) {
+                afterTextChanged {
+                    emitter.onNext(it.toString())
+                }
             }
         }
+        compositeDisposable.add(
+            publishSubject
+                .filter { it.length > MIN_LENGTH }
+                .map { it.trim() }
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    openSearch(it.toString())
+                    requireActivity().hideKeyboard()
+                }
+        )
     }
 
     private fun initObservers() {
         viewModel.playingMovies.observe(requireActivity(), Observer { movies ->
-
             val moviesList = listOf(
                 MainCardContainer(
                     R.string.playing,
@@ -121,6 +132,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         super.onStop()
         search_toolbar.clear()
         adapter.clear()
+        compositeDisposable.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

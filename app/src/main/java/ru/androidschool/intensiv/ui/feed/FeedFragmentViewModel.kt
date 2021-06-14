@@ -8,7 +8,6 @@ import ru.androidschool.intensiv.data.MovieRepository
 import ru.androidschool.intensiv.network.entity.Movie
 import timber.log.Timber
 
-
 class FeedFragmentViewModel : ViewModel() {
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()

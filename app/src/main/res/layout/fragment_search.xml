@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/color_background_main"
                 android:overScrollMode="never"
-                android:scrollbars="vertical"
+                android:scrollbars="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </LinearLayout>

@@ -29,9 +29,13 @@ object MovieRepository {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-    fun getMovieDetails(id: Int): Observable<MovieDetailResponse> = MovieApiClient.api.getMovieDetail(movieId = id)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    fun getMovieDetails(id: Int): Observable<MovieDetailResponse> =
+        MovieApiClient.api.getMovieDetail(movieId = id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 
-
+    fun getSearchMovies(query: CharSequence): Observable<MoviesResponse> =
+        MovieApiClient.api.getSearchMovies(query)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 }
