@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
-import ru.androidschool.intensiv.data.TvShowsRepository
+import ru.androidschool.intensiv.data.tvshows.TvShowsRepositoryImpl
 import ru.androidschool.intensiv.network.entity.TvShow
+import timber.log.Timber
 
 class TvShowsViewModel : ViewModel() {
 
@@ -20,7 +21,10 @@ class TvShowsViewModel : ViewModel() {
 
     private fun getTvShows() {
         compositeDisposable.add(
-            TvShowsRepository.tvShows.subscribe { _shows.value = it.results }
+            TvShowsRepositoryImpl.tvShows.subscribe(
+                { _shows.value = it.results },
+                { e -> Timber.d(e.localizedMessage) }
+            )
         )
     }
 }

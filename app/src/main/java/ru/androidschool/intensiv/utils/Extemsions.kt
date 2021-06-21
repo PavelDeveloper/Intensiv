@@ -3,13 +3,21 @@ package ru.androidschool.intensiv.utils
 import android.app.Activity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.core.content.getSystemService
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.ui.afterTextChanged
+import ru.androidschool.intensiv.ui.feed.FeedFragment
+import java.util.concurrent.TimeUnit
 
 fun ImageView.loadTransformationImage(imgUrl: String?, transformation: Transformation) {
     Picasso.get()
@@ -34,5 +42,28 @@ fun ImageView.loadAvatar(@DrawableRes imgRes: Int, transformation: Transformatio
 
 fun Activity.hideKeyboard() {
     val imm = getSystemService<InputMethodManager>()
-    imm?.hideSoftInputFromWindow(window.decorView.findViewById<View>(android.R.id.content).windowToken, 0)
+    imm?.hideSoftInputFromWindow(
+        window.decorView.findViewById<View>(android.R.id.content).windowToken,
+        0
+    )
 }
+
+fun <T> Single<T>.on(): Single<T> =
+    this.subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
+fun EditText.searchObservable(): Observable<String> {
+    val publishSubject: Observable<String> = Observable.create { emitter ->
+        this.afterTextChanged {
+            emitter.onNext(it.toString())
+        }
+    }
+    return publishSubject
+        .filter { it.length > FeedFragment.MIN_LENGTH }
+        .map { it.trim() }
+        .debounce(DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+}
+
+const val DEBOUNCE_TIME = 500L

@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.ui.movie_details
+package ru.androidschool.intensiv.ui.details
 
 import android.os.Bundle
 import android.view.View
