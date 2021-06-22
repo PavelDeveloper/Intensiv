@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
-import ru.androidschool.intensiv.data.actors.ActorsRepositoryImpl
-import ru.androidschool.intensiv.data.details.DetailsMovieRepositoryImpl
+import ru.androidschool.intensiv.data.actors.MovieActorsRepository
+import ru.androidschool.intensiv.data.details.DetailsMovieRepository
 import ru.androidschool.intensiv.network.entity.Actor
 import ru.androidschool.intensiv.network.entity.MovieDetailResponse
 import timber.log.Timber
@@ -29,7 +29,7 @@ class MovieDetailsViewModel(movieId: Int?) : ViewModel() {
 
     private fun getMovieDetail(id: Int) {
         compositeDisposable.add(
-            DetailsMovieRepositoryImpl.getMovieDetails(id)
+            DetailsMovieRepository.getDetails(id)
                 .subscribe({ _movieDetails.value = it },
                     { e -> Timber.d(e.localizedMessage) }
                 )
@@ -38,7 +38,7 @@ class MovieDetailsViewModel(movieId: Int?) : ViewModel() {
 
     private fun getActors(id: Int) {
         compositeDisposable.add(
-            ActorsRepositoryImpl.getActors(id)
+            MovieActorsRepository.getActors(id)
                 .subscribe({ _actors.value = it.cast },
                     { e -> Timber.d(e.localizedMessage) })
         )

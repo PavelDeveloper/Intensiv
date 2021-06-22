@@ -5,7 +5,7 @@ import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.network.entity.MoviesResponse
 import ru.androidschool.intensiv.utils.on
 
-object PlayingMovieRepositoryImpl : MovieRepository {
+object PlayingMovieRepository : MovieRepository {
     override fun getMovies(): Single<MoviesResponse> =
         MovieApiClient.api.getNowPlayingMovies().on()
 }

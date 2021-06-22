@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
-import ru.androidschool.intensiv.data.movies.PlayingMovieRepositoryImpl
-import ru.androidschool.intensiv.data.movies.PopularMoviesRepositoryImpl
-import ru.androidschool.intensiv.data.movies.UpcomingRepositoryImpl
+import ru.androidschool.intensiv.data.movies.PlayingMovieRepository
+import ru.androidschool.intensiv.data.movies.PopularMoviesRepository
+import ru.androidschool.intensiv.data.movies.UpcomingRepository
 import ru.androidschool.intensiv.network.entity.Movie
 import timber.log.Timber
 
@@ -31,7 +31,7 @@ class FeedFragmentViewModel : ViewModel() {
 
     private fun getPlayingMovies() {
         compositeDisposable.add(
-            PlayingMovieRepositoryImpl.getMovies()
+            PlayingMovieRepository.getMovies()
                 .subscribe(
                     { response -> _playingMovies.value = response.results },
                     { e -> Timber.d(e.localizedMessage) }
@@ -41,7 +41,7 @@ class FeedFragmentViewModel : ViewModel() {
 
     private fun getPopularMovies() {
         compositeDisposable.add(
-            PopularMoviesRepositoryImpl.getMovies()
+            PopularMoviesRepository.getMovies()
                 .subscribe(
                     { response -> _popularMovies.value = response.results },
                     { e -> Timber.d(e.localizedMessage) }
@@ -51,7 +51,7 @@ class FeedFragmentViewModel : ViewModel() {
 
     private fun getUpcomingMovies() {
         compositeDisposable.add(
-            UpcomingRepositoryImpl.getMovies()
+            UpcomingRepository.getMovies()
                 .subscribe(
                     { _upcomingMovies.value = it.results },
                     { e -> Timber.d(e.localizedMessage) }

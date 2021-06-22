@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
-import ru.androidschool.intensiv.data.search.SearchMoviesRepositoryImpl
+import ru.androidschool.intensiv.data.search.SearchMoviesRepository
 import ru.androidschool.intensiv.network.entity.Movie
 import timber.log.Timber
 
@@ -27,7 +27,7 @@ class SearchViewModel(query: CharSequence?) : ViewModel() {
 
     private fun getSearchMovies(query: CharSequence) {
         compositeDisposable.add(
-            SearchMoviesRepositoryImpl.getSearchMovies(query).subscribe(
+            SearchMoviesRepository.getSearchMovies(query).subscribe(
                 { _searchMovies.value = it.results },
                 { e -> Timber.d(e.localizedMessage) })
         )
