@@ -15,6 +15,9 @@ class SearchViewModel(query: CharSequence?) : ViewModel() {
     private val _searchMovies: MutableLiveData<List<Movie>> = MutableLiveData()
     val searchMovies: LiveData<List<Movie>> = _searchMovies
 
+    private val _isDownloading: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { value = false }
+    val isDownloading: LiveData<Boolean> = _isDownloading
+
     init {
         query?.let {
             getSearchMovies(it)
@@ -27,9 +30,12 @@ class SearchViewModel(query: CharSequence?) : ViewModel() {
 
     private fun getSearchMovies(query: CharSequence) {
         compositeDisposable.add(
-            SearchMoviesRepository.getSearchMovies(query).subscribe(
-                { _searchMovies.value = it.results },
-                { e -> Timber.d(e.localizedMessage) })
+            SearchMoviesRepository.getSearchMovies(query)
+                .doOnSubscribe { _isDownloading.value = true }
+                .doFinally { _isDownloading.value = false }
+                .subscribe(
+                    { _searchMovies.value = it.results },
+                    { e -> Timber.d(e.localizedMessage) })
         )
     }
 

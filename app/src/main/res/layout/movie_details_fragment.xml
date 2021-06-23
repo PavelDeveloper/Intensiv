@@ -11,6 +11,16 @@
         android:background="@color/color_background_main"
         tools:context="ru.androidschool.intensiv.ui.details.MovieDetailsFragment">
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:backgroundTint="@color/colorControlNormal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image_detail_preview"
             android:layout_width="match_parent"
@@ -18,7 +28,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progress_bar"
             tools:src="@drawable/ic_avatar" />
 
 

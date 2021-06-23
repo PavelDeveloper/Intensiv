@@ -15,16 +15,22 @@ class TvShowsViewModel : ViewModel() {
     private val _shows: MutableLiveData<List<TvShow>> = MutableLiveData()
     val shows: LiveData<List<TvShow>> = _shows
 
+    private val _isDownloading: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>().apply { value = false }
+    val isDownloading: LiveData<Boolean> = _isDownloading
+
     init {
         getTvShows()
     }
 
     private fun getTvShows() {
         compositeDisposable.add(
-            PopularTvShowsRepository.tvShows.subscribe(
-                { _shows.value = it.results },
-                { e -> Timber.d(e.localizedMessage) }
-            )
+            PopularTvShowsRepository.tvShows
+                .doOnSubscribe { _isDownloading.value = true }
+                .doFinally { _isDownloading.value = false }
+                .subscribe({ _shows.value = it.results },
+                    { e -> Timber.d(e.localizedMessage) }
+                )
         )
     }
 }

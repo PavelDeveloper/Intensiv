@@ -2,6 +2,7 @@ package ru.androidschool.intensiv.ui.details
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -24,6 +25,8 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.isDownloading.observe(requireActivity(), Observer { progress_bar.isVisible = it })
 
         viewModel.movieDetails.observe(requireActivity(), Observer { details ->
             title_tv.text = details.title

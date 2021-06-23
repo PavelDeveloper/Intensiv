@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -62,6 +63,9 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     }
 
     private fun initObservers() {
+
+        viewModel.isDownloading.observe(requireActivity(), Observer { progress_bar.isVisible = it })
+
         viewModel.playingMovies.observe(requireActivity(), Observer { movies ->
             val moviesList = listOf(
                 MainCardContainer(

@@ -2,6 +2,7 @@ package ru.androidschool.intensiv.ui.search
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -67,6 +68,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     private fun initObserver() {
+
+        viewModel.isDownloading.observe(requireActivity(), Observer { progress_bar.isVisible = it })
+
         viewModel.searchMovies.observe(requireActivity(), Observer { result ->
             val searchedMoviesList = result.map {
                 MovieItemHorizontal(it) { movie ->
