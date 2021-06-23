@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,7 +19,9 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.data.movies.MovieType
 import ru.androidschool.intensiv.network.entity.Movie
+import ru.androidschool.intensiv.network.entity.MoviesResponse
 import ru.androidschool.intensiv.ui.view.MovieItem
 import ru.androidschool.intensiv.utils.hideKeyboard
 import java.util.concurrent.TimeUnit
@@ -63,52 +66,44 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     }
 
     private fun initObservers() {
-
         viewModel.isDownloading.observe(requireActivity(), Observer { progress_bar.isVisible = it })
+        viewModel.movies.observe(requireActivity(), Observer { renderItems(it) })
+    }
 
-        viewModel.playingMovies.observe(requireActivity(), Observer { movies ->
-            val moviesList = listOf(
-                MainCardContainer(
-                    R.string.playing,
-                    movies.distinct().map {
-                        MovieItem(it) { movie ->
-                            openMovieDetails(
-                                movie
-                            )
-                        }
-                    }.toList()
-                )
-            )
-            adapter.apply { addAll(moviesList) }
-        })
+    private fun renderItems(map: HashMap<MovieType, MoviesResponse>) {
+        map.keys.forEach { key ->
+            when (key) {
+                MovieType.PLAYING -> {
+                    map[key]?.results?.let {
+                        initRecycler(it, R.string.playing)
+                    }
+                }
+                MovieType.UPCOMING -> {
+                    map[key]?.results?.let {
+                        initRecycler(it, R.string.upcoming)
+                    }
+                }
+                MovieType.POPULAR -> {
+                    map[key]?.results?.let {
+                        initRecycler(it, R.string.popular)
+                    }
+                }
+            }
+        }
+    }
 
-        viewModel.popularMovies.observe(requireActivity(), Observer { movie ->
-            val popularMoviesList = listOf(
-                MainCardContainer(
-                    R.string.popular,
-                    movie.distinct().map {
-                        MovieItem(it) { movie ->
-                            openMovieDetails(movie)
-                        }
-                    }.toList()
-                )
+    private fun initRecycler(movies: List<Movie>, @StringRes title: Int) {
+        val popularMoviesList = listOf(
+            MainCardContainer(
+                title,
+                movies.distinct().map {
+                    MovieItem(it) { movie ->
+                        openMovieDetails(movie)
+                    }
+                }.toList()
             )
-            adapter.apply { addAll(popularMoviesList) }
-        })
-
-        viewModel.upcomingMovies.observe(requireActivity(), Observer { movie ->
-            val popularMoviesList = listOf(
-                MainCardContainer(
-                    R.string.upcoming,
-                    movie.distinct().map {
-                        MovieItem(it) { movie ->
-                            openMovieDetails(movie)
-                        }
-                    }.toList()
-                )
-            )
-            adapter.apply { addAll(popularMoviesList) }
-        })
+        )
+        adapter.apply { addAll(popularMoviesList) }
     }
 
     private fun openMovieDetails(movie: Movie) {

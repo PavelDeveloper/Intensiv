@@ -10,7 +10,6 @@ import ru.androidschool.intensiv.data.movies.MovieType
 import ru.androidschool.intensiv.data.movies.PlayingMovieRepository
 import ru.androidschool.intensiv.data.movies.PopularMoviesRepository
 import ru.androidschool.intensiv.data.movies.UpcomingRepository
-import ru.androidschool.intensiv.network.entity.Movie
 import ru.androidschool.intensiv.network.entity.MoviesResponse
 import timber.log.Timber
 
@@ -18,14 +17,8 @@ class FeedFragmentViewModel : ViewModel() {
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    private val _playingMovies: MutableLiveData<List<Movie>> = MutableLiveData()
-    val playingMovies: LiveData<List<Movie>> = _playingMovies
-
-    private val _popularMovies: MutableLiveData<List<Movie>> = MutableLiveData()
-    val popularMovies: LiveData<List<Movie>> = _popularMovies
-
-    private val _upcomingMovies: MutableLiveData<List<Movie>> = MutableLiveData()
-    val upcomingMovies: LiveData<List<Movie>> = _upcomingMovies
+    private val _movies: MutableLiveData<HashMap<MovieType, MoviesResponse>> = MutableLiveData()
+    val movies: LiveData<HashMap<MovieType, MoviesResponse>> = _movies
 
     private val _isDownloading: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>().apply { value = false }
@@ -52,15 +45,7 @@ class FeedFragmentViewModel : ViewModel() {
                 )
                 .doOnSubscribe { _isDownloading.value = true }
                 .doFinally { _isDownloading.value = false }
-                .subscribe({ hashMap ->
-                    hashMap.keys.forEach {
-                        when (it) {
-                            MovieType.PLAYING -> _playingMovies.value = hashMap[it]?.results
-                            MovieType.POPULAR -> _popularMovies.value = hashMap[it]?.results
-                            MovieType.UPCOMING -> _upcomingMovies.value = hashMap[it]?.results
-                        }
-                    }
-                },
+                .subscribe({ hashMap -> _movies.value = hashMap },
                     { e -> Timber.d(e.localizedMessage) }
                 )
         )
