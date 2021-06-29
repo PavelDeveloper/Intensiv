@@ -5,15 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.data.search.SearchMoviesRepository
-import ru.androidschool.intensiv.network.entity.Movie
+import ru.androidschool.intensiv.network.entity.MovieNetworkDataEntity
 import timber.log.Timber
 
 class SearchViewModel(query: CharSequence?) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val _searchMovies: MutableLiveData<List<Movie>> = MutableLiveData()
-    val searchMovies: LiveData<List<Movie>> = _searchMovies
+    private val _searchMovies: MutableLiveData<List<MovieNetworkDataEntity>> = MutableLiveData()
+    val searchMovies: LiveData<List<MovieNetworkDataEntity>> = _searchMovies
 
     private val _isDownloading: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { value = false }
     val isDownloading: LiveData<Boolean> = _isDownloading

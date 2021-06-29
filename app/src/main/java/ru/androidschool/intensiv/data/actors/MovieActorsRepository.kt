@@ -6,6 +6,6 @@ import ru.androidschool.intensiv.network.entity.CreditsResponse
 import ru.androidschool.intensiv.utils.on
 
 object MovieActorsRepository : ActorsRepository {
-    override fun getActors(id: Int): Single<CreditsResponse> =
+    override fun getActors(id: Long): Single<CreditsResponse> =
         MovieApiClient.api.getActors(movieId = id).on()
 }

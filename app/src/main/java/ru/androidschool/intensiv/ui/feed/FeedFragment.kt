@@ -19,9 +19,9 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.movies.MovieType
-import ru.androidschool.intensiv.network.entity.Movie
-import ru.androidschool.intensiv.network.entity.MoviesResponse
+import ru.androidschool.intensiv.data.movies.entity.MovieType
+import ru.androidschool.intensiv.domain.entity.Movie
+import ru.androidschool.intensiv.domain.entity.MoviesDomainEntity
 import ru.androidschool.intensiv.ui.view.MovieItem
 import ru.androidschool.intensiv.utils.hideKeyboard
 import java.util.concurrent.TimeUnit
@@ -70,7 +70,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         viewModel.movies.observe(requireActivity(), Observer { renderItems(it) })
     }
 
-    private fun renderItems(map: HashMap<MovieType, MoviesResponse>) {
+    private fun renderItems(map: HashMap<MovieType, MoviesDomainEntity>) {
         map.keys.forEach { key ->
             when (key) {
                 MovieType.PLAYING -> {
@@ -93,7 +93,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     }
 
     private fun initRecycler(movies: List<Movie>, @StringRes title: Int) {
-        val popularMoviesList = listOf(
+        val moviesList = listOf(
             MainCardContainer(
                 title,
                 movies.distinct().map {
@@ -103,12 +103,12 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 }.toList()
             )
         )
-        adapter.apply { addAll(popularMoviesList) }
+        adapter.apply { addAll(moviesList) }
     }
 
-    private fun openMovieDetails(movie: Movie) {
+    private fun openMovieDetails(movieNetworkEntity: Movie) {
         val bundle = Bundle()
-        bundle.putInt(KEY_MOVIE_ID, movie.id)
+        bundle.putLong(KEY_MOVIE_ID, movieNetworkEntity.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 

@@ -4,5 +4,5 @@ import io.reactivex.Single
 import ru.androidschool.intensiv.network.entity.CreditsResponse
 
 interface ActorsRepository {
-    fun getActors(id: Int): Single<CreditsResponse>
+    fun getActors(id: Long): Single<CreditsResponse>
 }

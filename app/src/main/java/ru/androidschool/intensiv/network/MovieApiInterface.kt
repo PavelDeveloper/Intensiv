@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.network
 
+import io.reactivex.Flowable
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -12,22 +13,22 @@ import ru.androidschool.intensiv.network.entity.TvShowsResponse
 interface MovieApiInterface {
 
     @GET("movie/now_playing")
-    fun getNowPlayingMovies(): Single<MoviesResponse>
+    fun getNowPlayingMovies(): Flowable<MoviesResponse>
 
     @GET("movie/upcoming")
-    fun getUpcomingMovies(): Single<MoviesResponse>
+    fun getUpcomingMovies(): Flowable<MoviesResponse>
 
     @GET("movie/popular")
-    fun getPopularMovies(): Single<MoviesResponse>
+    fun getPopularMovies(): Flowable<MoviesResponse>
 
     @GET("tv/popular")
     fun getTvPopular(): Single<TvShowsResponse>
 
     @GET("movie/{movie_id}")
-    fun getMovieDetail(@Path("movie_id") movieId: Int): Single<MovieDetailResponse>
+    fun getMovieDetail(@Path("movie_id") movieId: Long): Single<MovieDetailResponse>
 
     @GET("movie/{movie_id}/credits")
-    fun getActors(@Path("movie_id") movieId: Int): Single<CreditsResponse>
+    fun getActors(@Path("movie_id") movieId: Long): Single<CreditsResponse>
 
     @GET("search/movie")
     fun getSearchMovies(@Query("query") query: CharSequence): Single<MoviesResponse>

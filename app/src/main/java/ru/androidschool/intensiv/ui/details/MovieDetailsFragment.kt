@@ -16,7 +16,7 @@ import ru.androidschool.intensiv.utils.loadImage
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
     private val viewModel: MovieDetailsViewModel by viewModels {
-        MovieDetailsViewModelFactory(arguments?.getInt(FeedFragment.KEY_MOVIE_ID))
+        MovieDetailsViewModelFactory(arguments?.getLong(FeedFragment.KEY_MOVIE_ID))
     }
 
     private val adapter by lazy {
@@ -25,8 +25,16 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initObservers()
+        like_check_box.setOnClickListener {
+            viewModel.onLikeClicked(like_check_box.isChecked)
+        }
+    }
 
+    private fun initObservers() {
         viewModel.isDownloading.observe(requireActivity(), Observer { progress_bar.isVisible = it })
+
+        viewModel.isLiked.observe(requireActivity(), Observer { like_check_box.isChecked = it })
 
         viewModel.movieDetails.observe(requireActivity(), Observer { details ->
             title_tv.text = details.title

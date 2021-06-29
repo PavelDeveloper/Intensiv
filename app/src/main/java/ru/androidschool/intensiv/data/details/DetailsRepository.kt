@@ -4,5 +4,5 @@ import io.reactivex.Single
 import ru.androidschool.intensiv.network.entity.MovieDetailResponse
 
 interface DetailsRepository {
-    fun getDetails(id: Int): Single<MovieDetailResponse>
+    fun getDetails(id: Long): Single<MovieDetailResponse>
 }

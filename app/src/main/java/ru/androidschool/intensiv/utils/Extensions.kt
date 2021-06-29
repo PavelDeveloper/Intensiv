@@ -8,11 +8,13 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.getSystemService
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.R
+import timber.log.Timber
 
 fun ImageView.loadTransformationImage(imgUrl: String?, transformation: Transformation) {
     Picasso.get()
@@ -46,3 +48,16 @@ fun Activity.hideKeyboard() {
 fun <T> Single<T>.on(): Single<T> =
     this.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
+
+fun Completable?.updateDataDb(save: () -> Completable?) =
+    this?.subscribeOn(Schedulers.io())
+        ?.observeOn(AndroidSchedulers.mainThread())
+        ?.subscribe(
+            {
+                Timber.d("DB = deleted")
+                save()?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
+                    ?.subscribe(
+                        { Timber.d("DB = saved") },
+                        { e -> Timber.d("DB = error ${e.localizedMessage}") })
+            },
+            { e -> Timber.d("DB = error ${e.localizedMessage}") })

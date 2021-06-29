@@ -6,6 +6,6 @@ import ru.androidschool.intensiv.network.entity.MovieDetailResponse
 import ru.androidschool.intensiv.utils.on
 
 object DetailsMovieRepository : DetailsRepository {
-    override fun getDetails(id: Int): Single<MovieDetailResponse> =
+    override fun getDetails(id: Long): Single<MovieDetailResponse> =
         MovieApiClient.api.getMovieDetail(movieId = id).on()
 }
