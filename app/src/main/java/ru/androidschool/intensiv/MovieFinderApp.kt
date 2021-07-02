@@ -2,17 +2,15 @@ package ru.androidschool.intensiv
 
 import android.app.Application
 import ru.androidschool.intensiv.data.db.AppDatabase
-import ru.androidschool.intensiv.data.movies.MoviesDao
 import timber.log.Timber
 
 class MovieFinderApp : Application() {
 
-    lateinit var database: MoviesDao
+    val database: AppDatabase by lazy { AppDatabase.get(applicationContext) }
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        database = AppDatabase.get(applicationContext).movieDao()
         initDebugTools()
     }
 
@@ -27,7 +25,7 @@ class MovieFinderApp : Application() {
     }
 
     companion object {
-        var instance: MovieFinderApp? = null
+        lateinit var instance: MovieFinderApp
             private set
     }
 }

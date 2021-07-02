@@ -20,7 +20,7 @@ object MovieApiClient {
     private const val HEADER_PRAGMA = "Pragma"
 
     private val cache by lazy {
-        Cache(File(MovieFinderApp.instance?.cacheDir, "identifier"), cacheSize)
+        Cache(File(MovieFinderApp.instance.cacheDir, "identifier"), cacheSize)
     }
 
     private val client: Retrofit

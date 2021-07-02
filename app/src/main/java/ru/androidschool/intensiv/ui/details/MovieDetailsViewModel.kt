@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
-import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.data.actors.MovieActorsRepository
 import ru.androidschool.intensiv.data.details.DetailsMovieRepository
 import ru.androidschool.intensiv.data.movies.LikedMoviesRepository
@@ -17,6 +15,7 @@ import ru.androidschool.intensiv.domain.entity.MovieDetails
 import ru.androidschool.intensiv.network.entity.Actor
 import ru.androidschool.intensiv.network.entity.CreditsResponse
 import ru.androidschool.intensiv.network.entity.MovieDetailResponse
+import ru.androidschool.intensiv.utils.on
 import timber.log.Timber
 
 class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
@@ -61,9 +60,8 @@ class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
                     isLiked = isLiked,
                     movieType = _type.value ?: MovieType.POPULAR
                 )
-            )?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe({
+            ).on()
+                .subscribe({
                     _isLiked.value = isLiked
                     Timber.d("isLiked = $isLiked ")
                 },
@@ -96,9 +94,8 @@ class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
 
     private fun isLiked(id: Long) {
         val disposable = LikedMoviesRepository.getLiked(id = id)
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe({ movie ->
+            .on()
+            .subscribe({ movie ->
                 _isLiked.value = movie.isLiked
                 _type.value = movie.movieType
             }, {

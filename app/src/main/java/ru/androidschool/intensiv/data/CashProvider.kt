@@ -1,37 +1,34 @@
 package ru.androidschool.intensiv.data
 
-import io.reactivex.Flowable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.Observable
+import ru.androidschool.intensiv.utils.on
 
 abstract class CashProvider<T>() {
 
-    fun getFlowable(type: RepositoryAccess): Flowable<T> {
-        return createFlowable(type)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+    fun getObservable(type: RepositoryAccess): Observable<T> {
+        return createObservable(type).on()
     }
 
-    private fun createFlowable(type: RepositoryAccess): Flowable<T> {
+    private fun createObservable(type: RepositoryAccess): Observable<T> {
         when (type) {
-            RepositoryAccess.OFFLINE -> return createOfflineFlowable()
-            RepositoryAccess.REMOTE -> return createRemoteFlowable()
+            RepositoryAccess.OFFLINE -> return createOfflineObservable()
+            RepositoryAccess.REMOTE -> return createRemoteObservable()
             RepositoryAccess.OFFLINE_FIRST -> {
-                val remoteFlowable = createRemoteFlowable()
-                return createOfflineFlowable()
-                    .onErrorResumeNext(remoteFlowable)
-                    .concatWith(remoteFlowable)
+                val remoteObservable = createRemoteObservable()
+                return createOfflineObservable()
+                    .onErrorResumeNext(remoteObservable)
+                    .concatWith(remoteObservable)
             }
             else -> {
-                val remoteFlowable = createRemoteFlowable()
-                return createOfflineFlowable()
-                    .onErrorResumeNext(remoteFlowable)
-                    .concatWith(remoteFlowable)
+                val remoteObservable = createRemoteObservable()
+                return createOfflineObservable()
+                    .onErrorResumeNext(remoteObservable)
+                    .concatWith(remoteObservable)
             }
         }
     }
 
-    protected abstract fun createRemoteFlowable(): Flowable<T>
+    protected abstract fun createRemoteObservable(): Observable<T>
 
-    protected abstract fun createOfflineFlowable(): Flowable<T>
+    protected abstract fun createOfflineObservable(): Observable<T>
 }

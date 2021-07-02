@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.network.entity
 
 import com.google.gson.annotations.SerializedName
+import ru.androidschool.intensiv.BuildConfig
 
 data class TvShowsResponse(
     val page: Int,
@@ -12,8 +13,6 @@ data class TvShowsResponse(
 )
 
 data class TvShow(
-    @SerializedName("poster_path")
-    val posterPath: String?,
     val overview: String,
     @SerializedName("genre_ids")
     val genreIds: List<Int>,
@@ -34,4 +33,8 @@ data class TvShow(
     val voteCount: Int,
     @SerializedName("vote_average")
     val voteAverage: Double
-)
+) {
+    @SerializedName("poster_path")
+    val posterPath: String? = null
+        get() = "${BuildConfig.POSTER_BASE_URL}$field"
+}

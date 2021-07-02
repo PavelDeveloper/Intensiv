@@ -55,4 +55,5 @@ ext {
     rxJava = '2.2.16'
 
     room_version = '2.3.0'
+    room_rx = '1.1.1'
 }

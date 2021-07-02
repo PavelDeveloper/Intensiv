@@ -8,9 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import ru.androidschool.intensiv.R
@@ -18,6 +16,7 @@ import ru.androidschool.intensiv.ui.feed.FeedFragment
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_SEARCH
 import ru.androidschool.intensiv.ui.view.MovieItemHorizontal
 import ru.androidschool.intensiv.utils.hideKeyboard
+import ru.androidschool.intensiv.utils.on
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -57,8 +56,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 .filter { it.length > FeedFragment.MIN_LENGTH }
                 .map { it.trim() }
                 .debounce(FeedFragment.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .on()
                 .subscribe {
                     adapter.clear()
                     viewModel.onSearchStarted(it.toString())

@@ -99,7 +99,6 @@ dependencies {
     //Room
     implementation "androidx.room:room-runtime:$rootProject.room_version"
     kapt "androidx.room:room-compiler:$rootProject.room_version"
-    implementation "androidx.room:room-rxjava2:2.3.0"
-    implementation "android.arch.persistence.room:rxjava2:1.1.1"
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation "androidx.room:room-rxjava2:$rootProject.room_version"
+    implementation "android.arch.persistence.room:rxjava2:$rootProject.room_rx"
 }

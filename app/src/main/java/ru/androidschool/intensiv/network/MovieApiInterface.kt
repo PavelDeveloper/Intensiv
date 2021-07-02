@@ -1,6 +1,6 @@
 package ru.androidschool.intensiv.network
 
-import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -13,13 +13,13 @@ import ru.androidschool.intensiv.network.entity.TvShowsResponse
 interface MovieApiInterface {
 
     @GET("movie/now_playing")
-    fun getNowPlayingMovies(): Flowable<MoviesResponse>
+    fun getNowPlayingMovies(): Observable<MoviesResponse>
 
     @GET("movie/upcoming")
-    fun getUpcomingMovies(): Flowable<MoviesResponse>
+    fun getUpcomingMovies(): Observable<MoviesResponse>
 
     @GET("movie/popular")
-    fun getPopularMovies(): Flowable<MoviesResponse>
+    fun getPopularMovies(): Observable<MoviesResponse>
 
     @GET("tv/popular")
     fun getTvPopular(): Single<TvShowsResponse>

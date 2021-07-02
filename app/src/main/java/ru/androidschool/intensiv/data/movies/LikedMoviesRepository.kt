@@ -1,36 +1,27 @@
 package ru.androidschool.intensiv.data.movies
 
 import io.reactivex.Completable
-import io.reactivex.Flowable
+import io.reactivex.Observable
 import ru.androidschool.intensiv.MovieFinderApp
+import ru.androidschool.intensiv.data.movies.entity.LikeRepository
 import ru.androidschool.intensiv.data.movies.entity.MovieDbEntity
-import ru.androidschool.intensiv.data.movies.entity.MovieType
-import ru.androidschool.intensiv.domain.entity.Movie
 import ru.androidschool.intensiv.domain.entity.MoviesDomainEntity
 
-object LikedMoviesRepository : MovieRepository {
+object LikedMoviesRepository : LikeRepository {
 
-    private val db = MovieFinderApp.instance?.database
+    private val db = MovieFinderApp.instance.database.movieDao()
 
-    override fun fetch(): Flowable<MoviesDomainEntity>? =
-        db?.getLiked()?.map {
+    override fun fetch(): Observable<MoviesDomainEntity> =
+        db.getLiked().map {
             MoviesDomainEntity(
                 page = 1,
                 results = it.map { item -> item.toDomain() }
             )
         }
 
-    override fun save(movies: List<Movie>): Completable? {
-        return db?.insertAll(
-            movies = movies.map { it.toDomain().copy(movieType = MovieType.POPULAR) }
-        )
-    }
+    override fun delete(id: Long): Completable = db.delete(id)
 
-    override fun deleteAll(): Completable? = null
+    override fun getLiked(id: Long): Observable<MovieDbEntity> = db.get(id)
 
-    override fun delete(id: Long): Completable? = db?.delete(id)
-
-    fun getLiked(id: Long): Flowable<MovieDbEntity>? = db?.get(id)
-
-    fun update(movie: MovieDbEntity): Completable? = db?.update(movie)
+    override fun update(movie: MovieDbEntity): Completable = db.update(movie)
 }

@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Function3
 import ru.androidschool.intensiv.data.movies.PlayingMovieRepository
@@ -12,7 +12,7 @@ import ru.androidschool.intensiv.data.movies.PopularMoviesRepository
 import ru.androidschool.intensiv.data.movies.UpcomingRepository
 import ru.androidschool.intensiv.data.movies.entity.MovieType
 import ru.androidschool.intensiv.domain.entity.MoviesDomainEntity
-import ru.androidschool.intensiv.utils.updateDataDb
+import ru.androidschool.intensiv.utils.on
 import timber.log.Timber
 
 class FeedFragmentViewModel(application: Application) : AndroidViewModel(application) {
@@ -32,16 +32,8 @@ class FeedFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     private fun getMovies() {
 
-    /*    PlayingMovieRepository.fetch().subscribe({
-            Timber.d("PlayingMovieRepository = ${it.results}")
-        },
-            { e ->
-                Timber.e("PlayingMovieRepository = ${e.localizedMessage}")
-            }
-        )*/
-
         compositeDisposable.add(
-            Flowable
+            Observable
                 .zip(
                     PlayingMovieRepository.fetch(),
                     PopularMoviesRepository.fetch(),
@@ -58,13 +50,14 @@ class FeedFragmentViewModel(application: Application) : AndroidViewModel(applica
                 .doOnSubscribe { _isDownloading.value = true }
                 .doFinally { _isDownloading.value = false }
                 .subscribe({ hashMap ->
-                    Timber.d("MOVIES h = $hashMap")
                     _movies.value = hashMap
                     if (hashMap.values.first().results.isNotEmpty()) {
+                        _isDownloading.value = false
                         saveMoviesToDb(hashMap)
                     }
                 },
                     { e ->
+                        _isDownloading.value = false
                         Timber.d(e.localizedMessage)
                     }
                 )
@@ -72,18 +65,15 @@ class FeedFragmentViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun saveMoviesToDb(hashMovies: HashMap<MovieType, MoviesDomainEntity>) {
-        hashMovies[MovieType.PLAYING]?.let {
-            PlayingMovieRepository.deleteAll()
-                .updateDataDb { PlayingMovieRepository.save(it.results) }
-        }
-        hashMovies[MovieType.POPULAR]?.let {
-            PopularMoviesRepository.deleteAll()
-                .updateDataDb { PopularMoviesRepository.save(it.results) }
-        }
-        hashMovies[MovieType.UPCOMING]?.let {
-            UpcomingRepository.deleteAll()
-                .updateDataDb { UpcomingRepository.save(it.results) }
-        }
+        Observable.concat(
+            PlayingMovieRepository.save(hashMovies[MovieType.PLAYING]!!.results)
+                .toObservable<Unit>(),
+            PopularMoviesRepository.save(hashMovies[MovieType.POPULAR]!!.results)
+                .toObservable<Unit>(),
+            UpcomingRepository.save(hashMovies[MovieType.UPCOMING]!!.results).toObservable<Unit>()
+        )
+            .on()
+            .subscribe()
     }
 
     override fun onCleared() {

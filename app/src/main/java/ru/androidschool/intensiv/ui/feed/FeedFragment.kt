@@ -13,9 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import ru.androidschool.intensiv.R
@@ -24,6 +22,7 @@ import ru.androidschool.intensiv.domain.entity.Movie
 import ru.androidschool.intensiv.domain.entity.MoviesDomainEntity
 import ru.androidschool.intensiv.ui.view.MovieItem
 import ru.androidschool.intensiv.utils.hideKeyboard
+import ru.androidschool.intensiv.utils.on
 import java.util.concurrent.TimeUnit
 
 class FeedFragment : Fragment(R.layout.feed_fragment) {
@@ -56,8 +55,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 .filter { it.length > MIN_LENGTH }
                 .map { it.trim() }
                 .debounce(DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .on()
                 .subscribe {
                     openSearch(it.toString())
                     requireActivity().hideKeyboard()
@@ -66,7 +64,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     }
 
     private fun initObservers() {
-        viewModel.isDownloading.observe(requireActivity(), Observer { progress_bar.isVisible = it })
+        viewModel.isDownloading.observe(requireActivity(), Observer { progress_bar?.isVisible = it })
         viewModel.movies.observe(requireActivity(), Observer { renderItems(it) })
     }
 
