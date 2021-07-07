@@ -7,20 +7,21 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Function3
-import ru.androidschool.intensiv.data.movies.PlayingMovieRepository
-import ru.androidschool.intensiv.data.movies.PopularMoviesRepository
-import ru.androidschool.intensiv.data.movies.UpcomingRepository
 import ru.androidschool.intensiv.data.movies.entity.MovieType
-import ru.androidschool.intensiv.domain.entity.MoviesDomainEntity
-import ru.androidschool.intensiv.utils.on
+import ru.androidschool.intensiv.data.movies.repository.PlayingMovieRepository
+import ru.androidschool.intensiv.data.movies.repository.PopularMoviesRepository
+import ru.androidschool.intensiv.data.movies.repository.UpcomingRepository
+import ru.androidschool.intensiv.data.movies.vo.MoviesResult
+import ru.androidschool.intensiv.domain.usecase.MoviesUseCase
+import ru.androidschool.intensiv.utils.applySchedulers
 import timber.log.Timber
 
 class FeedFragmentViewModel(application: Application) : AndroidViewModel(application) {
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    private val _movies: MutableLiveData<HashMap<MovieType, MoviesDomainEntity>> = MutableLiveData()
-    val movies: LiveData<HashMap<MovieType, MoviesDomainEntity>> = _movies
+    private val _movies: MutableLiveData<HashMap<MovieType, MoviesResult>> = MutableLiveData()
+    val movies: LiveData<HashMap<MovieType, MoviesResult>> = _movies
 
     private val _isDownloading: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>().apply { value = false }
@@ -35,11 +36,11 @@ class FeedFragmentViewModel(application: Application) : AndroidViewModel(applica
         compositeDisposable.add(
             Observable
                 .zip(
-                    PlayingMovieRepository.fetch(),
-                    PopularMoviesRepository.fetch(),
-                    UpcomingRepository.fetch(),
-                    Function3<MoviesDomainEntity, MoviesDomainEntity, MoviesDomainEntity,
-                            HashMap<MovieType, MoviesDomainEntity>> { playing, popular, upcoming ->
+                    MoviesUseCase(PlayingMovieRepository).fetchMovies(),
+                    MoviesUseCase(PopularMoviesRepository).fetchMovies(),
+                    MoviesUseCase(UpcomingRepository).fetchMovies(),
+                    Function3<MoviesResult, MoviesResult, MoviesResult,
+                            HashMap<MovieType, MoviesResult>> { playing, popular, upcoming ->
                         hashMapOf(
                             MovieType.PLAYING to playing,
                             MovieType.POPULAR to popular,
@@ -64,7 +65,7 @@ class FeedFragmentViewModel(application: Application) : AndroidViewModel(applica
         )
     }
 
-    private fun saveMoviesToDb(hashMovies: HashMap<MovieType, MoviesDomainEntity>) {
+    private fun saveMoviesToDb(hashMovies: HashMap<MovieType, MoviesResult>) {
         Observable.concat(
             PlayingMovieRepository.save(hashMovies[MovieType.PLAYING]!!.results)
                 .toObservable<Unit>(),
@@ -72,7 +73,7 @@ class FeedFragmentViewModel(application: Application) : AndroidViewModel(applica
                 .toObservable<Unit>(),
             UpcomingRepository.save(hashMovies[MovieType.UPCOMING]!!.results).toObservable<Unit>()
         )
-            .on()
+            .applySchedulers()
             .subscribe()
     }
 

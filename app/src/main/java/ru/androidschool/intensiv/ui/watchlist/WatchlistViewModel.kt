@@ -3,11 +3,11 @@ package ru.androidschool.intensiv.ui.watchlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import ru.androidschool.intensiv.data.movies.LikedMoviesRepository
-import ru.androidschool.intensiv.domain.entity.Movie
+import ru.androidschool.intensiv.data.movies.repository.LikedMoviesRepository
+import ru.androidschool.intensiv.data.movies.vo.Movie
+import ru.androidschool.intensiv.domain.usecase.LikeUseCase
+import ru.androidschool.intensiv.utils.applySchedulers
 import timber.log.Timber
 
 class WatchlistViewModel : ViewModel() {
@@ -22,10 +22,9 @@ class WatchlistViewModel : ViewModel() {
     }
 
     private fun fetch() {
-        val disposable = LikedMoviesRepository.fetch()
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe({
+        val disposable = LikeUseCase(LikedMoviesRepository).fetchMovies()
+            .applySchedulers()
+            .subscribe({
                 _movies.value = it.results
             }, { e ->
                 Timber.e(e.localizedMessage)

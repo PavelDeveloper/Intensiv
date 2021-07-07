@@ -5,8 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import ru.androidschool.intensiv.data.movies.MovieTypeDbConverter
-import ru.androidschool.intensiv.data.movies.MoviesDao
+import ru.androidschool.intensiv.data.movies.db.MovieTypeDbConverter
+import ru.androidschool.intensiv.data.movies.db.MoviesDao
 import ru.androidschool.intensiv.data.movies.entity.MovieDbEntity
 import ru.androidschool.intensiv.utils.DB_NAME
 

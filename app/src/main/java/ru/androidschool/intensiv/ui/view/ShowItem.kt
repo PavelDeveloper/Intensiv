@@ -4,7 +4,7 @@ import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.item_with_text_horizontal.*
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.network.entity.TvShow
+import ru.androidschool.intensiv.data.tvshows.vo.TvShow
 import ru.androidschool.intensiv.utils.loadImage
 
 class ShowItem(

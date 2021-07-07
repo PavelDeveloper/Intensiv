@@ -6,24 +6,26 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
-import ru.androidschool.intensiv.data.actors.MovieActorsRepository
-import ru.androidschool.intensiv.data.details.DetailsMovieRepository
-import ru.androidschool.intensiv.data.movies.LikedMoviesRepository
+import ru.androidschool.intensiv.data.actors.repository.MovieActorsRepository
+import ru.androidschool.intensiv.data.actors.vo.Actor
+import ru.androidschool.intensiv.data.actors.vo.Credits
+import ru.androidschool.intensiv.data.details.repository.DetailsMovieRepository
+import ru.androidschool.intensiv.data.details.vo.MovieDetailInfo
 import ru.androidschool.intensiv.data.movies.entity.MovieDbEntity
 import ru.androidschool.intensiv.data.movies.entity.MovieType
-import ru.androidschool.intensiv.domain.entity.MovieDetails
-import ru.androidschool.intensiv.network.entity.Actor
-import ru.androidschool.intensiv.network.entity.CreditsResponse
-import ru.androidschool.intensiv.network.entity.MovieDetailResponse
-import ru.androidschool.intensiv.utils.on
+import ru.androidschool.intensiv.data.movies.repository.LikedMoviesRepository
+import ru.androidschool.intensiv.data.movies.vo.MovieDetails
+import ru.androidschool.intensiv.domain.usecase.ActorsUseCase
+import ru.androidschool.intensiv.domain.usecase.DetailsUseCase
+import ru.androidschool.intensiv.domain.usecase.LikeUseCase
 import timber.log.Timber
 
 class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val _movieDetails: MutableLiveData<MovieDetailResponse> = MutableLiveData()
-    val movieDetails: LiveData<MovieDetailResponse> = _movieDetails
+    private val _movieDetailInfo: MutableLiveData<MovieDetailInfo> = MutableLiveData()
+    val movieDetailInfo: LiveData<MovieDetailInfo> = _movieDetailInfo
 
     private val _actors: MutableLiveData<List<Actor>> = MutableLiveData()
     val actors: LiveData<List<Actor>> = _actors
@@ -44,8 +46,8 @@ class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
     }
 
     fun onLikeClicked(isLiked: Boolean) {
-        _movieDetails.value?.let {
-            LikedMoviesRepository.update(
+        _movieDetailInfo.value?.let {
+            LikeUseCase(LikedMoviesRepository).update(
                 MovieDbEntity(
                     movieId = it.id,
                     posterPath = it.posterPath,
@@ -60,23 +62,22 @@ class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
                     isLiked = isLiked,
                     movieType = _type.value ?: MovieType.POPULAR
                 )
-            ).on()
-                .subscribe({
-                    _isLiked.value = isLiked
-                    Timber.d("isLiked = $isLiked ")
-                },
-                    { e -> Timber.e(e.localizedMessage) })
+            ).subscribe({
+                _isLiked.value = isLiked
+                Timber.d("isLiked = $isLiked ")
+            },
+                { e -> Timber.e(e.localizedMessage) })
         }
     }
 
     private fun getMovieData(id: Long) {
         compositeDisposable.add(
             Single.zip(
-                DetailsMovieRepository.getDetails(id),
-                MovieActorsRepository.getActors(id),
-                BiFunction<MovieDetailResponse, CreditsResponse, MovieDetails> { details, actors ->
+                DetailsUseCase(DetailsMovieRepository).getDetails(id),
+                ActorsUseCase(MovieActorsRepository).getActors(id),
+                BiFunction<MovieDetailInfo, Credits, MovieDetails> { details, actors ->
                     MovieDetails(
-                        movieInfo = details,
+                        movieDetailInfo = details,
                         actors = actors
                     )
                 }
@@ -84,17 +85,16 @@ class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
                 .doOnSubscribe { _isDownloading.value = true }
                 .doFinally { _isDownloading.value = false }
                 .subscribe({ movieDetails ->
-                    _movieDetails.value = movieDetails.movieInfo
+                    _movieDetailInfo.value = movieDetails.movieDetailInfo
                     _actors.value = movieDetails.actors.cast
-                    isLiked(movieDetails.movieInfo.id)
+                    isLiked(movieDetails.movieDetailInfo.id)
                 },
                     { e -> Timber.d(e.localizedMessage) })
         )
     }
 
     private fun isLiked(id: Long) {
-        val disposable = LikedMoviesRepository.getLiked(id = id)
-            .on()
+        val disposable = LikeUseCase(LikedMoviesRepository).getLiked(id = id)
             .subscribe({ movie ->
                 _isLiked.value = movie.isLiked
                 _type.value = movie.movieType

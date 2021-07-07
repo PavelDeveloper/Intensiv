@@ -5,7 +5,7 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.item_with_text_circle.*
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.network.entity.Actor
+import ru.androidschool.intensiv.data.actors.vo.Actor
 import ru.androidschool.intensiv.utils.loadTransformationImage
 
 class ActorItem(

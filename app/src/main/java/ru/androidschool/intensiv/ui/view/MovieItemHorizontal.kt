@@ -4,12 +4,12 @@ import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.item_with_text_horizontal.*
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.network.entity.MovieNetworkDataEntity
+import ru.androidschool.intensiv.data.movies.vo.Movie
 import ru.androidschool.intensiv.utils.loadImage
 
 class MovieItemHorizontal(
-    private val content: MovieNetworkDataEntity,
-    private val onClick: (movieNetworkEntity: MovieNetworkDataEntity) -> Unit
+    private val content: Movie,
+    private val onClick: (movieNetworkEntity: Movie) -> Unit
 ) : Item() {
 
     override fun getLayout() = R.layout.item_with_text_horizontal

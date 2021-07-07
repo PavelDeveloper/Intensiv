@@ -16,7 +16,7 @@ import ru.androidschool.intensiv.ui.feed.FeedFragment
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_SEARCH
 import ru.androidschool.intensiv.ui.view.MovieItemHorizontal
 import ru.androidschool.intensiv.utils.hideKeyboard
-import ru.androidschool.intensiv.utils.on
+import ru.androidschool.intensiv.utils.applySchedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -56,7 +56,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 .filter { it.length > FeedFragment.MIN_LENGTH }
                 .map { it.trim() }
                 .debounce(FeedFragment.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
-                .on()
+                .applySchedulers()
                 .subscribe {
                     adapter.clear()
                     viewModel.onSearchStarted(it.toString())

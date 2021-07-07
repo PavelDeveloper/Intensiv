@@ -36,7 +36,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
         viewModel.isLiked.observe(requireActivity(), Observer { like_check_box.isChecked = it })
 
-        viewModel.movieDetails.observe(requireActivity(), Observer { details ->
+        viewModel.movieDetailInfo.observe(requireActivity(), Observer { details ->
             title_tv.text = details.title
             detail_rating.rating = details.voteAverage.toFloat() / 2
             description_tv.text = details.overview

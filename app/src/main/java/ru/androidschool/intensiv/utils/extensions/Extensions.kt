@@ -45,14 +45,14 @@ fun Activity.hideKeyboard() {
     )
 }
 
-fun <T> Single<T>.on(): Single<T> =
+fun <T> Single<T>.applySchedulers(): Single<T> =
     this.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-fun Completable.on(): Completable =
+fun Completable.applySchedulers(): Completable =
     this.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-fun <T> Observable<T>.on(): Observable<T> =
+fun <T> Observable<T>.applySchedulers(): Observable<T> =
     this.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

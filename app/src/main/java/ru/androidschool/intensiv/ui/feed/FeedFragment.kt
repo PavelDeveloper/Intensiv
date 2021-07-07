@@ -18,11 +18,11 @@ import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.movies.entity.MovieType
-import ru.androidschool.intensiv.domain.entity.Movie
-import ru.androidschool.intensiv.domain.entity.MoviesDomainEntity
+import ru.androidschool.intensiv.data.movies.vo.Movie
+import ru.androidschool.intensiv.data.movies.vo.MoviesResult
 import ru.androidschool.intensiv.ui.view.MovieItem
+import ru.androidschool.intensiv.utils.applySchedulers
 import ru.androidschool.intensiv.utils.hideKeyboard
-import ru.androidschool.intensiv.utils.on
 import java.util.concurrent.TimeUnit
 
 class FeedFragment : Fragment(R.layout.feed_fragment) {
@@ -55,7 +55,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 .filter { it.length > MIN_LENGTH }
                 .map { it.trim() }
                 .debounce(DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
-                .on()
+                .applySchedulers()
                 .subscribe {
                     openSearch(it.toString())
                     requireActivity().hideKeyboard()
@@ -64,11 +64,13 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     }
 
     private fun initObservers() {
-        viewModel.isDownloading.observe(requireActivity(), Observer { progress_bar?.isVisible = it })
+        viewModel.isDownloading.observe(
+            requireActivity(),
+            Observer { progress_bar?.isVisible = it })
         viewModel.movies.observe(requireActivity(), Observer { renderItems(it) })
     }
 
-    private fun renderItems(map: HashMap<MovieType, MoviesDomainEntity>) {
+    private fun renderItems(map: HashMap<MovieType, MoviesResult>) {
         map.keys.forEach { key ->
             when (key) {
                 MovieType.PLAYING -> {
@@ -86,6 +88,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                         initRecycler(it, R.string.popular)
                     }
                 }
+                else -> MovieType.DEFAULT
             }
         }
     }

@@ -1,12 +1,11 @@
 package ru.androidschool.intensiv.data
 
 import io.reactivex.Observable
-import ru.androidschool.intensiv.utils.on
 
 abstract class CashProvider<T>() {
 
     fun getObservable(type: RepositoryAccess): Observable<T> {
-        return createObservable(type).on()
+        return createObservable(type)
     }
 
     private fun createObservable(type: RepositoryAccess): Observable<T> {

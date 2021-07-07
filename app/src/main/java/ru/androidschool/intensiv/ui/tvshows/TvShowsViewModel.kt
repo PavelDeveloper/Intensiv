@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
-import ru.androidschool.intensiv.data.tvshows.PopularTvShowsRepository
-import ru.androidschool.intensiv.network.entity.TvShow
+import ru.androidschool.intensiv.data.tvshows.repository.PopularTvShowsRepository
+import ru.androidschool.intensiv.data.tvshows.vo.TvShow
 import timber.log.Timber
 
 class TvShowsViewModel : ViewModel() {
