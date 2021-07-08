@@ -31,4 +31,6 @@
     <string name="studio">Студия</string>
     <string name="genre">Жанр</string>
     <string name="year">Год</string>
+    <string name="empty_tv_show_list">No tv shows now</string>
+    <string name="error_tv_shows_getting">Something went wrong</string>
 </resources>
