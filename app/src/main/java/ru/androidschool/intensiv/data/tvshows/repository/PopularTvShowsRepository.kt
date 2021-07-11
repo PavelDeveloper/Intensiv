@@ -9,5 +9,5 @@ import ru.androidschool.intensiv.network.MovieApiClient
 object PopularTvShowsRepository : TvShowRepository {
 
     override val tvShows: Single<TvShowsResult>
-        get() = MovieApiClient.api.getTvPopular().map { TvShowsResultMapper.toValueObject(it) }
+        get() = MovieApiClient.apiClient.getTvPopular().map { TvShowsResultMapper.toValueObject(it) }
 }

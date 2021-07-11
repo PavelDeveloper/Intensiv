@@ -6,21 +6,24 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
-import ru.androidschool.intensiv.data.actors.repository.MovieActorsRepository
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import ru.androidschool.intensiv.data.actors.vo.Actor
 import ru.androidschool.intensiv.data.actors.vo.Credits
-import ru.androidschool.intensiv.data.details.repository.DetailsMovieRepository
 import ru.androidschool.intensiv.data.details.vo.MovieDetailInfo
 import ru.androidschool.intensiv.data.movies.entity.MovieDbEntity
 import ru.androidschool.intensiv.data.movies.entity.MovieType
-import ru.androidschool.intensiv.data.movies.repository.LikedMoviesRepository
 import ru.androidschool.intensiv.data.movies.vo.MovieDetails
 import ru.androidschool.intensiv.domain.usecase.ActorsUseCase
 import ru.androidschool.intensiv.domain.usecase.DetailsUseCase
 import ru.androidschool.intensiv.domain.usecase.LikeUseCase
 import timber.log.Timber
 
-class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
+class MovieDetailsViewModel(movieId: Long?) : ViewModel(), KoinComponent {
+
+    private val likeUseCase: LikeUseCase by inject()
+    private val detailsUseCase: DetailsUseCase by inject()
+    private val actorsUseCase: ActorsUseCase by inject()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -47,7 +50,7 @@ class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
 
     fun onLikeClicked(isLiked: Boolean) {
         _movieDetailInfo.value?.let {
-            LikeUseCase(LikedMoviesRepository).update(
+            likeUseCase.update(
                 MovieDbEntity(
                     movieId = it.id,
                     posterPath = it.posterPath,
@@ -73,8 +76,8 @@ class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
     private fun getMovieData(id: Long) {
         compositeDisposable.add(
             Single.zip(
-                DetailsUseCase(DetailsMovieRepository).getDetails(id),
-                ActorsUseCase(MovieActorsRepository).getActors(id),
+                detailsUseCase.getDetails(id),
+                actorsUseCase.getActors(id),
                 BiFunction<MovieDetailInfo, Credits, MovieDetails> { details, actors ->
                     MovieDetails(
                         movieDetailInfo = details,
@@ -94,7 +97,7 @@ class MovieDetailsViewModel(movieId: Long?) : ViewModel() {
     }
 
     private fun isLiked(id: Long) {
-        val disposable = LikeUseCase(LikedMoviesRepository).getLiked(id = id)
+        val disposable = likeUseCase.getLiked(id = id)
             .subscribe({ movie ->
                 _isLiked.value = movie.isLiked
                 _type.value = movie.movieType

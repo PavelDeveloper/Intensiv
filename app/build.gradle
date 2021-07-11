@@ -101,4 +101,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$rootProject.room_version"
     implementation "androidx.room:room-rxjava2:$rootProject.room_version"
     implementation "android.arch.persistence.room:rxjava2:$rootProject.room_rx"
+
+    //DI
+    implementation "org.koin:koin-android:$rootProject.koin_version"
 }

@@ -8,5 +8,5 @@ import ru.androidschool.intensiv.network.MovieApiClient
 
 object SearchMoviesRepository : SearchRepository {
     override fun getSearchMovies(query: CharSequence): Single<MoviesResult> =
-        MovieApiClient.api.getSearchMovies(query).map { MovieResultMapper.toValueObject(it) }
+        MovieApiClient.apiClient.getSearchMovies(query).map { MovieResultMapper.toValueObject(it) }
 }

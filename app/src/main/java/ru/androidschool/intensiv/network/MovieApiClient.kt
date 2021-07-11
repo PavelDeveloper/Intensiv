@@ -49,7 +49,7 @@ object MovieApiClient {
                 .addNetworkInterceptor(networkInterceptor())
                 .addInterceptor(offlineInterceptor())
 
-    val api: MovieApiInterface
+    val apiClient: MovieApiInterface
         get() {
             return client.create(MovieApiInterface::class.java)
         }
