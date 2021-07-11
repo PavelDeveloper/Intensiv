@@ -10,7 +10,7 @@ object MovieDetailsMapper {
             backdropPath = dtoDetail.backdropPath,
             belongsCollection = dtoDetail.belongsCollection,
             budget = dtoDetail.budget,
-            genres = dtoDetail.genres.map { GenreMapper.toValueObject(it) },
+            genres = GenreMapper.toViewObject(dtoDetail.genres),
             homepage = dtoDetail.homepage,
             id = dtoDetail.id,
             imdbId = dtoDetail.imdbId,

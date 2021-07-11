@@ -37,7 +37,8 @@ object UpcomingRepository : CashProvider<MoviesResult>(), MovieRepository {
             if (it.isNotEmpty()) {
                 MoviesResult(
                     page = 1,
-                    results = it.map { item -> MovieDbMapper.toValueObject(item) })
+                    results = MovieDbMapper.toViewObject(it)
+                )
             } else {
                 throw Exception()
             }

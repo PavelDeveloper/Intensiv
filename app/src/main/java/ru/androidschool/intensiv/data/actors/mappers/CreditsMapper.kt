@@ -7,7 +7,7 @@ object CreditsMapper {
     fun toValueObject(dto: CreditsResponseDto): Credits {
         return Credits(
             id = dto.id,
-            cast = dto.cast.map { ActorMapper.toValueObject(it) }
+            cast = ActorMapper.toViewObject(dto.cast)
         )
     }
 }

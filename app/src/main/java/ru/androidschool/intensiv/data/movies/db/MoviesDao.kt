@@ -27,12 +27,6 @@ interface MoviesDao {
     @Update
     fun update(movie: MovieDbEntity): Completable
 
-    /**
-     * у меня почему-то этот метод не добавляет новые элементы, если бд пустая и вообще
-     * */
-    @Update
-    fun update(movies: List<MovieDbEntity>): Completable
-
     @Query("SELECT * FROM movies WHERE isLiked = :isLiked")
     fun getLiked(isLiked: Boolean = true): Observable<List<MovieDbEntity>>
 

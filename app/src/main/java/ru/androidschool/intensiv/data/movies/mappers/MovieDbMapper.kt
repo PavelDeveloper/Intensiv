@@ -1,9 +1,10 @@
 package ru.androidschool.intensiv.data.movies.mappers
 
+import ru.androidschool.intensiv.data.base.ViewObjectMapper
 import ru.androidschool.intensiv.data.movies.entity.MovieDbEntity
 import ru.androidschool.intensiv.data.movies.vo.Movie
 
-object MovieDbMapper {
+object MovieDbMapper : ViewObjectMapper<MovieDbEntity, Movie> {
     fun toDbObject(vo: Movie): MovieDbEntity =
         MovieDbEntity(
             posterPath = vo.posterPath,
@@ -20,19 +21,19 @@ object MovieDbMapper {
             isLiked = vo.isLiked
         )
 
-    fun toValueObject(dbObject: MovieDbEntity): Movie =
+    override fun toViewObject(dto: MovieDbEntity): Movie =
         Movie(
-            posterPath = dbObject.posterPath,
-            overview = dbObject.overview,
-            releaseDate = dbObject.releaseDate,
-            id = dbObject.movieId,
-            originalTitle = dbObject.originalTitle,
-            originalLanguage = dbObject.originalLanguage,
-            title = dbObject.title,
-            backdropPath = dbObject.backdropPath,
-            popularity = dbObject.popularity,
-            voteAverage = dbObject.voteAverage,
-            movieType = dbObject.movieType,
-            isLiked = dbObject.isLiked
+            posterPath = dto.posterPath,
+            overview = dto.overview,
+            releaseDate = dto.releaseDate,
+            id = dto.movieId,
+            originalTitle = dto.originalTitle,
+            originalLanguage = dto.originalLanguage,
+            title = dto.title,
+            backdropPath = dto.backdropPath,
+            popularity = dto.popularity,
+            voteAverage = dto.voteAverage,
+            movieType = dto.movieType,
+            isLiked = dto.isLiked
         )
 }

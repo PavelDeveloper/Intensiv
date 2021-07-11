@@ -2,9 +2,10 @@ package ru.androidschool.intensiv.data.actors.mappers
 
 import ru.androidschool.intensiv.data.actors.dto.ActorDto
 import ru.androidschool.intensiv.data.actors.vo.Actor
+import ru.androidschool.intensiv.data.base.ViewObjectMapper
 
-object ActorMapper {
-    fun toValueObject(dto: ActorDto): Actor =
+object ActorMapper : ViewObjectMapper<ActorDto, Actor> {
+    override fun toViewObject(dto: ActorDto): Actor =
         Actor(
             adult = dto.adult,
             gender = dto.gender,
