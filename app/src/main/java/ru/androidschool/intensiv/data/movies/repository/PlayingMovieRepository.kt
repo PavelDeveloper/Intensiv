@@ -6,7 +6,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import ru.androidschool.intensiv.data.CashProvider
 import ru.androidschool.intensiv.data.RepositoryAccess
-import ru.androidschool.intensiv.data.db.AppDatabase
+import ru.androidschool.intensiv.data.movies.db.MoviesDao
 import ru.androidschool.intensiv.data.movies.entity.MovieType
 import ru.androidschool.intensiv.data.movies.mappers.MovieDbMapper
 import ru.androidschool.intensiv.data.movies.mappers.MovieResultMapper
@@ -17,25 +17,25 @@ import ru.androidschool.intensiv.network.MovieApiClient
 
 object PlayingMovieRepository : CashProvider<MoviesResult>(), MovieRepository, KoinComponent {
 
-    private val db: AppDatabase by inject()
+    private val db: MoviesDao by inject()
 
     override fun fetch(): Observable<MoviesResult> = getObservable(RepositoryAccess.OFFLINE_FIRST)
 
     override fun save(movies: List<Movie>): Completable {
-        return db.movieDao().insertAll(
+        return db.insertAll(
             movies = movies.map { MovieDbMapper.toDbObject(it).copy(movieType = MovieType.PLAYING) }
         )
     }
 
     override fun deleteAll(): Completable {
-        return db.movieDao().delete(MovieType.PLAYING, false)
+        return db.delete(MovieType.PLAYING, false)
     }
 
     override fun createRemoteObservable(): Observable<MoviesResult> =
         MovieApiClient.apiClient.getNowPlayingMovies().map { MovieResultMapper.toValueObject(it) }
 
     public override fun createOfflineObservable(): Observable<MoviesResult> {
-        return db.movieDao().get(MovieType.PLAYING)
+        return db.get(MovieType.PLAYING)
             .map {
                 if (it.isNotEmpty()) {
                     MoviesResult(
@@ -43,7 +43,7 @@ object PlayingMovieRepository : CashProvider<MoviesResult>(), MovieRepository, K
                         results = MovieDbMapper.toViewObject(it)
                     )
                 } else {
-                    throw Exception()
+                    throw Exception("DataBase query exception")
                 }
             }
     }

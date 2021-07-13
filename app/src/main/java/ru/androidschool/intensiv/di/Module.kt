@@ -14,7 +14,7 @@ import ru.androidschool.intensiv.domain.usecase.LikeUseCase
 import ru.androidschool.intensiv.network.MovieApiClient
 
 val dataModule = module {
-    single { AppDatabase.get(get()) }
+    single { AppDatabase.get(get()).movieDao() }
     single { MovieApiClient.apiClient }
 }
 
