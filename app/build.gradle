@@ -104,4 +104,8 @@ dependencies {
 
     //DI
     implementation "org.koin:koin-android:$rootProject.koin_version"
+
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines_android_version"
 }
