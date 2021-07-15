@@ -1,8 +1,10 @@
 package ru.androidschool.intensiv.presentation.tvshows
 
+import androidx.paging.PagingData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.androidschool.intensiv.data.tvshows.vo.TvShow
 import ru.androidschool.intensiv.domain.usecase.TvShowsUseCase
@@ -27,12 +29,22 @@ class TvShowsPresenter(private val useCase: TvShowsUseCase) :
         }
     }
 
+    fun getPagingTvShows() {
+        scope.launch(Dispatchers.Main) {
+            view?.hideLoading()
+            useCase.getPagingTvShows().collectLatest {
+                view?.showPagingMovies(it)
+            }
+        }
+    }
+
     override fun detachView() {
         job.cancel()
     }
 
     interface TvShowsView {
         fun showMovies(tvShows: List<TvShow>)
+        fun showPagingMovies(tvShow: PagingData<TvShow>)
         fun showLoading()
         fun hideLoading()
         fun showEmptyMovies()

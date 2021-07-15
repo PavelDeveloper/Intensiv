@@ -22,7 +22,7 @@ interface MovieApiInterface {
     fun getPopularMovies(): Observable<MoviesResponseDto>
 
     @GET("tv/popular")
-    suspend fun getTvPopular(): TvShowsResponseDto
+    suspend fun getTvPopular(@Query("page") page: Int = 1): TvShowsResponseDto
 
     @GET("movie/{movie_id}")
     fun getMovieDetail(@Path("movie_id") movieId: Long): Single<MovieDetailInfoResponseDto>
