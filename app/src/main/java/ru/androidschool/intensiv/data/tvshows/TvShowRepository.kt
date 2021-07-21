@@ -1,8 +1,11 @@
 package ru.androidschool.intensiv.data.tvshows
 
-import io.reactivex.Single
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
+import ru.androidschool.intensiv.data.tvshows.vo.TvShow
 import ru.androidschool.intensiv.data.tvshows.vo.TvShowsResult
 
 interface TvShowRepository {
-    val tvShows: Single<TvShowsResult>
+    suspend fun getTvShows(): TvShowsResult
+    suspend fun getPagingTvShows(): Flow<PagingData<TvShow>>
 }
