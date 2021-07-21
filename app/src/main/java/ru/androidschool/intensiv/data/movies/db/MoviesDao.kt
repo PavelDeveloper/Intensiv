@@ -9,10 +9,10 @@ import ru.androidschool.intensiv.data.movies.entity.MovieType
 @Dao
 interface MoviesDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(movies: List<MovieDbEntity>): Completable
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(movies: MovieDbEntity): Completable
 
     @Query("SELECT * FROM movies")

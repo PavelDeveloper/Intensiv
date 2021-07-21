@@ -67,8 +67,14 @@ dependencies {
 
     // Testing
     testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.test:core-ktx:$rootProject.androidx_test_core"
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+
+    testImplementation "androidx.test.ext:junit:$rootProject.ext_junit"
+    testImplementation "androidx.arch.core:core-testing:$rootProject.core_testing_version"
+    testImplementation "org.robolectric:robolectric:$rootProject.robolectric_version"
+    testImplementation "org.mockito:mockito-inline:$rootProject.mockito_version"
 
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
